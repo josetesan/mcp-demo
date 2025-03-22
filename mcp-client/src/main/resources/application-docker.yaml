@@ -1,0 +1,29 @@
+logging:
+  file.name: /tmp/file-client.log
+  level:
+    org.springframework.ai.chat.client.advisor: DEBUG
+server:
+ port: 9000
+spring:
+  application:
+    name: mcp-client
+  ai:
+    ollama:
+      base-url: 192.168.86.24:11434
+      chat:
+        model: qwen2.5:latest
+        options:
+          #seed: 10041003
+          num-ctx: 16384
+          max-tokens: 16384
+    mcp:
+      client:
+        enabled: true
+        type: ASYNC  # or ASYNC for reactive applications
+        request-timeout: 300s
+        sse:
+          connections:
+            travel-agency:
+              url: http://travel-agency:8060
+            recommendations:
+              url: http://recommendations:8080

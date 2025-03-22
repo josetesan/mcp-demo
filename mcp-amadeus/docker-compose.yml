@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  amadeus-api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - AMADEUS_API_KEY=YOUR_API_KEY
+      - AMADEUS_API_SECRET=YOUR_API_SECRET
+      - SPRING_PROFILES_ACTIVE=prod
+    restart: unless-stopped

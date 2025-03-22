@@ -1,0 +1,33 @@
+logging:
+  file.name: /tmp/file-client.log
+  level:
+    org.springframework.ai.chat.client.advisor: DEBUG
+server:
+ port: 9000
+spring:
+  application:
+    name: mcp-client
+  ai:
+    ollama:
+      chat:
+        model: qwen2.5:latest
+        options:
+          #seed: 10041003
+          num-ctx: 16384
+          max-tokens: 16384
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY}
+    mcp:
+      client:
+        enabled: true
+        type: ASYNC  # or ASYNC for reactive applications
+        request-timeout: 300s
+        sse:
+          connections:
+            travel-agency:
+              url: http://localhost:8060
+            recommendations:
+              url: http://localhost:8080
+              env:
+                AMADEUS_API_KEY: ${AMADEUS_API_KEY}
+                AMADEUS_API_SECRET: ${AMADEUS_API_SECRET}

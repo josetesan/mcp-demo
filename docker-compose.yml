@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:17-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+  travel-agency:
+    build: travel-agency
+    ports:
+      - "8060:8060"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - db
+  recommendations:
+    build: mcp-amadeus
+    ports:
+      - "8080:8080"
+    env_file: mcp-amadeus/.env
+  client:
+    build: mcp-client
+    ports:
+      - "9000:9000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - recommendations
+      - db
+      - travel-agency
