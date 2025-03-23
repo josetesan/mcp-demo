@@ -11,6 +11,12 @@ services:
       - "8060:8060"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:8060/"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 3s       
     depends_on:
       - db
   recommendations:
@@ -25,6 +31,12 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - recommendations
-      - db
-      - travel-agency
+      recommendations:
+        condition: service_started
+      db:
+        condition: service_started
+      travel-agency:
+        condition: service_healthy
+        restart: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   

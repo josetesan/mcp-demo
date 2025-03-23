@@ -23,7 +23,11 @@ The application uses Spring AI to create an AI assistant that helps users plan t
       │
       │             ┌─────────────────┐
       └─────────────┤ Amadeus         │
-                    │ Recommendations │
+      │             │ Recommendations │
+      |             └─────────────────┘
+      │             ┌─────────────────┐
+      └─────────────┤ Ollamas         │
+                    │ Running in host │
                     └─────────────────┘
 ```
 
@@ -36,18 +40,21 @@ The application uses Spring AI to create an AI assistant that helps users plan t
 ## Setup Instructions
 
 1. Clone this repository:
+
    ```
    git clone <repository-url>
    cd mcp-demo
    ```
 
 2. Create an `.env` file in the `mcp-amadeus` directory with your Amadeus API credentials:
+
    ```
    AMADEUS_API_KEY=your_amadeus_api_key
    AMADEUS_API_SECRET=your_amadeus_api_secret
    ```
 
 3. If using Anthropic Claude, add your API key to the environment:
+
    ```
    export ANTHROPIC_API_KEY=your_anthropic_api_key
    ```
@@ -77,6 +84,7 @@ Once the application is running:
 - API Documentation: http://localhost:8060/api-docs
 
 Key endpoints:
+
 - `/api/customers` - Customer management
 - `/api/destinations` - Destination information
 - `/api/travel-packages` - Travel package booking
@@ -91,6 +99,7 @@ Key endpoints:
 ### Travel Agency Service
 
 The core service that manages:
+
 - Customer information
 - Destination data (cities, countries, prices)
 - Travel package bookings
@@ -98,12 +107,14 @@ The core service that manages:
 ### Amadeus Recommendations Service
 
 Integrates with the Amadeus API to provide:
+
 - Travel destination recommendations
 - Shopping and activity recommendations for destinations
 
 ### MCP Client
 
 A web-based chat interface that:
+
 - Connects users to the AI assistant
 - Provides a conversational interface for travel planning
 - Uses Spring AI's Model Context Protocol to coordinate between services
@@ -113,12 +124,14 @@ A web-based chat interface that:
 To build and run individual services for development:
 
 1. Travel Agency Service:
+
    ```
    cd travel-agency
    ./mvnw spring-boot:run -Dspring.profiles.active=local
    ```
 
 2. Amadeus Recommendations:
+
    ```
    cd mcp-amadeus
    ./mvnw spring-boot:run
