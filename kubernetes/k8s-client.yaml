@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client
+  namespace: mcp-demo
+spec:
+  ports:
+  - port: 9000
+    targetPort: 9000
+  selector:
+    app: client
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  namespace: mcp-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - name: client
+        image: muallin/mcp-demo-client:latest  # You'll need to build and push this image to a registry
+        ports:
+        - containerPort: 9000
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: docker
+      initContainers:
+      - name: wait-for-dependencies
+        image: busybox
+        command: ['sh', '-c', 'until nc -z recommendations 8080 && nc -z travel-agency 8060 && nc -z db 5432; do echo waiting for dependencies; sleep 2; done;']

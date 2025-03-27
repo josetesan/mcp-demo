@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: amadeus-secret
+  namespace: mcp-demo
+type: Opaque
+data:
+  AMADEUS_API_KEY: MksxbW5PdGFaYzYyWWJJanhrSkFIWTVTRjBmc3JZMnE=  # base64 encoded '2K1mnOtaZc62YbIjxkJAHY5SF0fsrY2q'
+  AMADEUS_API_SECRET: UU55OW5wQXp4UDlnQlpPMA==  # base64 encoded 'QNy9npAzxP9gBZO0'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recommendations
+  namespace: mcp-demo
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: recommendations
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendations
+  namespace: mcp-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommendations
+  template:
+    metadata:
+      labels:
+        app: recommendations
+    spec:
+      containers:
+      - name: recommendations
+        image: muallin/mcp-demo-amadeus:latest  # You'll need to build and push this image to a registry
+        ports:
+        - containerPort: 8080
+        env:
+        - name: AMADEUS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: amadeus-secret
+              key: AMADEUS_API_KEY
+        - name: AMADEUS_API_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: amadeus-secret
+              key: AMADEUS_API_SECRET

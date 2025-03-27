@@ -26,7 +26,7 @@ The application uses Spring AI to create an AI assistant that helps users plan t
       │             │ Recommendations │
       |             └─────────────────┘
       │             ┌─────────────────┐
-      └─────────────┤ Ollamas         │
+      └─────────────┤ Ollama         │
                     │ Running in host │
                     └─────────────────┘
 ```

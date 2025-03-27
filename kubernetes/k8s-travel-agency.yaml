@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: travel-agency
+  namespace: mcp-demo
+spec:
+  ports:
+  - port: 8060
+    targetPort: 8060
+  selector:
+    app: travel-agency
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: travel-agency
+  namespace: mcp-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: travel-agency
+  template:
+    metadata:
+      labels:
+        app: travel-agency
+    spec:
+      containers:
+      - name: travel-agency
+        image: muallin/mcp-demo-travel-agency:latest  # You'll need to build and push this image to a registry
+        ports:
+        - containerPort: 8060
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: docker
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8060
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 5
